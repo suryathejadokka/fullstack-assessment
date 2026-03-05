@@ -43,6 +43,9 @@ export default function Home() {
     string | undefined
   >(undefined);
   const [loading, setLoading] = useState(true);
+  const [total, setTotal] = useState(0);
+  const [offset, setOffset] = useState(0);
+  const limit = 20;
 
   useEffect(() => {
     fetch("/api/categories")
@@ -63,24 +66,30 @@ export default function Home() {
   }, [selectedCategory]);
 
   useEffect(() => {
+    setOffset(0);
+  }, [search, selectedCategory, selectedSubCategory]);
+
+  useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(true);
       const params = new URLSearchParams();
       if (search) params.append("search", search);
       if (selectedCategory) params.append("category", selectedCategory);
       if (selectedSubCategory) params.append("subCategory", selectedSubCategory);
-      params.append("limit", "20");
+      params.append("limit", String(limit));
+      params.append("offset", String(offset));
 
       fetch(`/api/products?${params}`)
         .then((res) => res.json())
         .then((data) => {
           setProducts(data.products);
+          setTotal(data.total);
           setLoading(false);
         });
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [search, selectedCategory, selectedSubCategory]);
+  }, [search, selectedCategory, selectedSubCategory, offset]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -165,7 +174,7 @@ export default function Home() {
         ) : (
           <>
             <p className="text-sm text-muted-foreground mb-4">
-              Showing {products.length} products
+              Showing {offset + 1}–{Math.min(offset + limit, total)} of {total} products
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {products.map((product) => (
@@ -208,6 +217,25 @@ export default function Home() {
                   </Card>
                 </Link>
               ))}
+            </div>
+            <div className="flex justify-center items-center gap-4 mt-8">
+              <Button
+                variant="outline"
+                onClick={() => setOffset((o) => Math.max(0, o - limit))}
+                disabled={offset === 0}
+              >
+                Previous
+              </Button>
+              <span className="text-sm text-muted-foreground">
+                Page {Math.floor(offset / limit) + 1} of {Math.ceil(total / limit)}
+              </span>
+              <Button
+                variant="outline"
+                onClick={() => setOffset((o) => o + limit)}
+                disabled={offset + limit >= total}
+              >
+                Next
+              </Button>
             </div>
           </>
         )}
