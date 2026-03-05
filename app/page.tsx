@@ -100,6 +100,7 @@ export default function Home() {
             </div>
 
             <Select
+              key={selectedCategory ?? "all-categories"}
               value={selectedCategory}
               onValueChange={(value) => setSelectedCategory(value || undefined)}
             >
@@ -117,6 +118,7 @@ export default function Home() {
 
             {selectedCategory && subCategories.length > 0 && (
               <Select
+                key={selectedSubCategory ?? "all-subcategories"}
                 value={selectedSubCategory}
                 onValueChange={(value) =>
                   setSelectedSubCategory(value || undefined)
