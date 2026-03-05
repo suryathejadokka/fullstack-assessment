@@ -63,19 +63,23 @@ export default function Home() {
   }, [selectedCategory]);
 
   useEffect(() => {
-    setLoading(true);
-    const params = new URLSearchParams();
-    if (search) params.append("search", search);
-    if (selectedCategory) params.append("category", selectedCategory);
-    if (selectedSubCategory) params.append("subCategory", selectedSubCategory);
-    params.append("limit", "20");
+    const timer = setTimeout(() => {
+      setLoading(true);
+      const params = new URLSearchParams();
+      if (search) params.append("search", search);
+      if (selectedCategory) params.append("category", selectedCategory);
+      if (selectedSubCategory) params.append("subCategory", selectedSubCategory);
+      params.append("limit", "20");
 
-    fetch(`/api/products?${params}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setProducts(data.products);
-        setLoading(false);
-      });
+      fetch(`/api/products?${params}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setProducts(data.products);
+          setLoading(false);
+        });
+    }, 300);
+
+    return () => clearTimeout(timer);
   }, [search, selectedCategory, selectedSubCategory]);
 
   return (
