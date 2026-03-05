@@ -69,7 +69,7 @@ export default function ProductPage() {
             <Card className="overflow-hidden">
               <CardContent className="p-0">
                 <div className="relative h-96 w-full bg-muted">
-                  {product.imageUrls[selectedImage] && (
+                  {product.imageUrls?.[selectedImage] && (
                     <Image
                       src={product.imageUrls[selectedImage]}
                       alt={product.title}
@@ -83,7 +83,7 @@ export default function ProductPage() {
               </CardContent>
             </Card>
 
-            {product.imageUrls.length > 1 && (
+            {product.imageUrls?.length > 1 && (
               <div className="grid grid-cols-4 gap-2">
                 {product.imageUrls.map((url, idx) => (
                   <button
@@ -116,7 +116,7 @@ export default function ProductPage() {
               <p className="text-sm text-muted-foreground">SKU: {product.retailerSku}</p>
             </div>
 
-            {product.featureBullets.length > 0 && (
+            {product.featureBullets?.length > 0 && (
               <Card>
                 <CardContent className="pt-6">
                   <h2 className="text-lg font-semibold mb-3">Features</h2>
