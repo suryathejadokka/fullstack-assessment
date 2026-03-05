@@ -52,6 +52,7 @@ export default function Home() {
 
   useEffect(() => {
     if (selectedCategory) {
+      setSelectedSubCategory(undefined);
       fetch(`/api/subcategories?category=${encodeURIComponent(selectedCategory)}`)
         .then((res) => res.json())
         .then((data) => setSubCategories(data.subCategories));
@@ -81,7 +82,7 @@ export default function Home() {
     <div className="min-h-screen bg-background">
       <header className="border-b">
         <div className="container mx-auto px-4 py-6">
-          <h1 className="text-4xl font-bold mb-6">StackShop</h1>
+          <Link href="/" onClick={() => { setSearch(""); setSelectedCategory(undefined); setSelectedSubCategory(undefined); }}><h1 className="text-4xl font-bold mb-6">StackShop</h1></Link>
 
           <div className="flex flex-col md:flex-row gap-4 mb-4">
             <div className="relative flex-1">
